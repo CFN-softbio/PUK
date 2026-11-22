@@ -1,0 +1,10 @@
+job,kspacing,ecutwfc,energy
+Li_bcc_template_k_0.1_ecutwfc_40.pwi,0.1,40,-393.80360377341657
+Li_bcc_template_k_0.1_ecutwfc_60.pwi,0.1,60,-393.80398554913216
+Li_bcc_template_k_0.1_ecutwfc_80.pwi,0.1,80,-393.8042837858994
+Li_bcc_template_k_0.1_ecutwfc_100.pwi,0.1,100,-393.80434637208225
+Li_bcc_template_k_0.1_ecutwfc_120.pwi,0.1,120,-393.8044627007483
+Li_bcc_template_k_0.15_ecutwfc_120.pwi,0.15,120,-393.8068605678945
+Li_bcc_template_k_0.2_ecutwfc_120.pwi,0.2,120,-393.8082854920106
+Li_bcc_template_k_0.25_ecutwfc_120.pwi,0.25,120,-393.80236728813367
+Li_bcc_template_k_0.3_ecutwfc_120.pwi,0.3,120,-393.78585732520094

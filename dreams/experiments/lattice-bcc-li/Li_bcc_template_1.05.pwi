@@ -1,0 +1,48 @@
+&CONTROL
+   calculation      = 'scf'
+   verbosity        = 'high'
+   restart_mode     = 'from_scratch'
+   tstress          = .true.
+   tprnfor          = .true.
+   outdir           = './tmp'
+   prefix           = 'Li_bcc'
+   pseudo_dir       = '/home2/smathur/PUKs/puks/dreams_dft/pseudopotentials'
+/
+&SYSTEM
+   ibrav            = 0
+   nat              = 2
+   ntyp             = 1
+    ecutwfc = 40,
+    ecutrho = 160,
+   occupations      = 'smearing'
+   degauss          = 0.01
+   smearing         = 'marzari-vanderbilt'
+   input_dft        = 'PBE'
+/
+&ELECTRONS
+   electron_maxstep = 200
+   conv_thr         = 1e-06
+/
+&IONS
+/
+&CELL
+/
+&FCP
+/
+&RISM
+/
+ATOMIC_SPECIES
+Li 6.94 li_pbe_v1.4.uspp.F.UPF
+
+K_POINTS automatic
+19 19 19 0 0 0
+
+CELL_PARAMETERS angstrom
+3.6235500000000003 0.0 0.0
+0.0 3.6235500000000003 0.0
+0.0 0.0 3.6235500000000003
+
+ATOMIC_POSITIONS angstrom
+Li 0.0000000000 0.0000000000 0.0000000000  
+Li 1.7255000000 1.7255000000 1.7255000000  
+

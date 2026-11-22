@@ -1,0 +1,38 @@
+{
+  "Li_bcc_k_0.1_ecutwfc_120.pwi": {
+    "k": 0.1,
+    "ecutwfc": 120
+  },
+  "Li_bcc_k_0.15_ecutwfc_120.pwi": {
+    "k": 0.15,
+    "ecutwfc": 120
+  },
+  "Li_bcc_k_0.2_ecutwfc_120.pwi": {
+    "k": 0.2,
+    "ecutwfc": 120
+  },
+  "Li_bcc_k_0.25_ecutwfc_120.pwi": {
+    "k": 0.25,
+    "ecutwfc": 120
+  },
+  "Li_bcc_k_0.3_ecutwfc_120.pwi": {
+    "k": 0.3,
+    "ecutwfc": 120
+  },
+  "Li_bcc_k_0.1_ecutwfc_40.pwi": {
+    "k": 0.1,
+    "ecutwfc": 40
+  },
+  "Li_bcc_k_0.1_ecutwfc_60.pwi": {
+    "k": 0.1,
+    "ecutwfc": 60
+  },
+  "Li_bcc_k_0.1_ecutwfc_80.pwi": {
+    "k": 0.1,
+    "ecutwfc": 80
+  },
+  "Li_bcc_k_0.1_ecutwfc_100.pwi": {
+    "k": 0.1,
+    "ecutwfc": 100
+  }
+}

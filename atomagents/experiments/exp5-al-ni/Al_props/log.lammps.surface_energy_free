@@ -1,0 +1,157 @@
+LAMMPS (22 Jul 2025 - Update 3)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread.
+  using 1 OpenMP thread(s) per MPI task
+
+clear
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread.
+  using 1 OpenMP thread(s) per MPI task
+units metal
+dimension 3
+boundary p p p
+atom_style atomic
+
+shell cd ./Al_props
+
+variable data_file string "data.surface.energy.periodic.lmp"
+variable potential_file string "potential.inp"
+variable thermo_time equal 100
+variable dump_time equal 1000
+variable surface_dir string z
+variable xxx string "x"
+variable yyy string "y"
+variable zzz string "z"
+
+
+read_data ${data_file}
+read_data data.surface.energy.periodic.lmp
+Reading data file ...
+  orthogonal box = (-1.813009e-05 -1.9983242e-05 -3.6335021e-05) to (31.501625 34.721537 63.133288)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  4158 atoms
+  reading velocities ...
+  4158 velocities
+  read_data CPU = 0.012 seconds
+include ${potential_file}
+include potential.inp
+pair_style eam/alloy
+pair_coeff * * ../potential_repository/Al99.eam.alloy Al
+
+compute peratom all pe/atom
+compute pe all pe
+
+thermo_style custom step temp pe vol press pxx pyy pzz fnorm
+thermo_modify format float %5.5g
+thermo ${thermo_time}
+thermo 100
+
+shell mkdir surface_energy
+
+variable dump_id equal 1
+variable N equal 100
+variable dump_out_name string "./surface_energy/dump.out"
+
+variable p1 equal "step"
+variable p2 equal "lx"
+variable p3 equal "ly"
+variable p4 equal "lz"
+variable p5 equal "pe"
+variable p6 equal "vol"
+
+fix extra all print 100 "${p1} ${p2} ${p3} ${p4} ${p5} ${p6}" file "surface_energy_free.csv" title "#step a_x a_y a_z pe vol" screen no
+
+if "${surface_dir}==${xxx} " then "change_box all boundary s p p"
+if "${surface_dir}==${yyy} " then "change_box all boundary p s p"
+if "${surface_dir}==${zzz} " then "change_box all boundary p p s"
+change_box all boundary p p s
+Changing box ...
+
+min_style cg
+minimize 0 1e-5 20000 20000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.28721
+  ghost atom cutoff = 8.28721
+  binsize = 4.143605, bins = 8 9 15
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair eam/alloy, perpetual
+      attributes: half, newton on
+      pair build: half/bin/atomonly/newton
+      stencil: half/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 5.578 | 5.578 | 5.578 Mbytes
+   Step          Temp          PotEng         Volume         Press           Pxx            Pyy            Pzz           Fnorm     
+         0      0 -13852 66511 -2186.4 -3147.6 -3147.6 -263.78 0.43692
+        51      0 -13852 66511 -2013.7 -3020.3 -3020.3 -0.56595 0.00010317
+Loop time of 0.407255 on 1 procs for 51 steps with 4158 atoms
+
+99.9% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = linesearch alpha is zero
+  Energy initial, next-to-last, final = 
+     -13852.0045237229   -13852.022561414   -13852.022561414
+  Force two-norm initial, final = 0.43692407 0.00010316594
+  Force max component initial, final = 0.018669981 5.0926555e-06
+  Final line search alpha, max atom move = 0.5 2.5463278e-06
+  Iterations, force evaluations = 51 101
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0.40094    | 0.40094    | 0.40094    |   0.0 | 98.45
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.0016287  | 0.0016287  | 0.0016287  |   0.0 |  0.40
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.004683   |            |       |  1.15
+
+Nlocal:           4158 ave        4158 max        4158 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5193 ave        5193 max        5193 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:         277200 ave      277200 max      277200 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 277200
+Ave neighs/atom = 66.666667
+Neighbor list builds = 0
+Dangerous builds = 0
+
+reset_timestep 0
+run 0
+WARNING: No fixes with time integration, atoms won't move
+For more information see https://docs.lammps.org/err0028 (src/verlet.cpp:60)
+Per MPI rank memory allocation (min/avg/max) = 4.455 | 4.455 | 4.455 Mbytes
+   Step          Temp          PotEng         Volume         Press           Pxx            Pyy            Pzz           Fnorm     
+         0      0 -13852 66496 -2014.2 -3021 -3021 -0.56607 0.00010317
+Loop time of 1.241e-06 on 1 procs for 0 steps with 4158 atoms
+
+161.2% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 1.241e-06  |            |       |100.00
+
+Nlocal:           4158 ave        4158 max        4158 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           5193 ave        5193 max        5193 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:         277200 ave      277200 max      277200 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 277200
+Ave neighs/atom = 66.666667
+Neighbor list builds = 0
+Dangerous builds = 0
+
+unfix extra
+    
+Total wall time: 0:00:00

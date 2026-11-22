@@ -1,0 +1,55 @@
+# ============================================================
+# Step 2: Create a solid-liquid interface
+#   - Split cell in z: lower half (z < zmid), upper half (z > zmid)
+#   - FREEZE the top half (setforce 0, not time-integrated)
+#   - MELT the bottom half at high T (3000 K) in NVT
+#   - Then equilibrate the whole two-phase system near Tm
+# Output: interface.data  (solid top + disordered/liquid bottom)
+# ============================================================
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+
+read_data       relaxed.data
+
+pair_style      eam
+pair_coeff      1 1 Ni_u3.eam
+pair_coeff      2 2 Cu_u3.eam
+
+timestep        0.001
+
+# --- Geometric split along z ---
+variable        zmid equal (zlo+zhi)/2.0
+region          rlower block INF INF INF INF INF ${zmid} units box
+region          rupper block INF INF INF INF ${zmid} INF units box
+group           lower region rlower
+group           upper region rupper
+
+# Per-region temperatures for monitoring
+compute         Tlow lower temp
+compute         Tup  upper temp
+thermo          100
+thermo_style    custom step temp c_Tlow c_Tup pe vol
+
+# --- Freeze the top half; melt the bottom half in NVT @ 3000 K ---
+velocity        upper set 0.0 0.0 0.0
+velocity        lower create 3000.0 45678 mom yes dist gaussian
+fix             freeze upper setforce 0.0 0.0 0.0
+fix             meltlow lower nvt temp 3000.0 3000.0 0.1
+run             25000
+
+# Cool the molten bottom toward the estimated melting point (still top frozen)
+fix             meltlow lower nvt temp 3000.0 1600.0 0.1
+run             15000
+unfix           meltlow
+unfix           freeze
+
+# --- Release everything; equilibrate two-phase system near Tm (NVT) ---
+velocity        all create 1600.0 78910 mom yes rot yes dist gaussian
+fix             eq all nvt temp 1600.0 1600.0 0.1
+run             20000
+unfix           eq
+
+write_data      interface.data
+print           "STEP2 DONE: solid-liquid interface written to interface.data"

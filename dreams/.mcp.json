@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "dreams-dft": {
+      "command": "python",
+      "args": ["-m", "mcp_servers.dft_server"]
+    },
+    "dreams-hpc": {
+      "command": "python",
+      "args": ["-m", "mcp_servers.hpc_server"]
+    }
+  }
+}

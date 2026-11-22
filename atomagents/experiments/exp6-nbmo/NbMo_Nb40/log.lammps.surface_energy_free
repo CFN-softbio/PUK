@@ -1,0 +1,164 @@
+LAMMPS (22 Jul 2025 - Update 3)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread.
+  using 1 OpenMP thread(s) per MPI task
+
+clear
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread.
+  using 1 OpenMP thread(s) per MPI task
+units metal
+dimension 3
+boundary p p p
+atom_style atomic
+
+shell cd ./NbMo_Nb40
+
+variable data_file string "data.surface.energy.periodic.lmp"
+variable potential_file string "potential.inp"
+variable thermo_time equal 100
+variable dump_time equal 1000
+variable surface_dir string y
+variable xxx string "x"
+variable yyy string "y"
+variable zzz string "z"
+
+
+read_data ${data_file}
+read_data data.surface.energy.periodic.lmp
+Reading data file ...
+  orthogonal box = (0.0014968598 0.0029990832 -5.1116849e-05) to (23.667923 50.104002 22.315794)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  1584 atoms
+  reading velocities ...
+  1584 velocities
+  read_data CPU = 0.005 seconds
+include ${potential_file}
+include potential.inp
+pair_style mlip ../potential_repository/NbMo.mtp
+pair_coeff * *
+
+compute peratom all pe/atom
+compute pe all pe
+
+thermo_style custom step temp pe vol press pxx pyy pzz fnorm
+thermo_modify format float %5.5g
+thermo ${thermo_time}
+thermo 100
+
+shell mkdir surface_energy
+
+variable dump_id equal 1
+variable N equal 100
+variable dump_out_name string "./surface_energy/dump.out"
+
+variable p1 equal "step"
+variable p2 equal "lx"
+variable p3 equal "ly"
+variable p4 equal "lz"
+variable p5 equal "pe"
+variable p6 equal "vol"
+
+fix extra all print 100 "${p1} ${p2} ${p3} ${p4} ${p5} ${p6}" file "surface_energy_free.csv" title "#step a_x a_y a_z pe vol" screen no
+
+if "${surface_dir}==${xxx} " then "change_box all boundary s p p"
+if "${surface_dir}==${yyy} " then "change_box all boundary p s p"
+change_box all boundary p s p
+Changing box ...
+WARNING: Resetting image flags for non-periodic dimensions (src/domain.cpp:2161)
+if "${surface_dir}==${zzz} " then "change_box all boundary p p s"
+
+min_style cg
+minimize 0 1e-5 20000 20000
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 6.7
+  ghost atom cutoff = 6.7
+  binsize = 3.35, bins = 8 15 7
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair mlip, perpetual
+      attributes: full, newton on
+      pair build: full/bin/atomonly
+      stencil: full/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 4.439 | 4.439 | 4.439 Mbytes
+   Step          Temp          PotEng         Volume         Press           Pxx            Pyy            Pzz           Fnorm     
+         0      0 -16631 26464 -10497 -12394 -6424.2 -12674 12.669
+       100      0 -16643 26464 -4737.6 -7058.8 2.5798 -7156.5 0.0021618
+       200      0 -16643 26464 -4739.9 -7061.9 0.068804 -7157.9 3.2245e-05
+       216      0 -16643 26464 -4740 -7062 -0.014319 -7158 9.4766e-06
+Loop time of 19.73 on 1 procs for 216 steps with 1584 atoms
+
+100.0% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+Minimization stats:
+  Stopping criterion = force tolerance
+  Energy initial, next-to-last, final = 
+      -16631.329079886  -16642.9349764007  -16642.9349764007
+  Force two-norm initial, final = 12.669289 9.4766344e-06
+  Force max component initial, final = 2.567512 1.5636419e-06
+  Final line search alpha, max atom move = 1 1.5636419e-06
+  Iterations, force evaluations = 216 428
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 19.714     | 19.714     | 19.714     |   0.0 | 99.92
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0.005173   | 0.005173   | 0.005173   |   0.0 |  0.03
+Output  | 0.00014483 | 0.00014483 | 0.00014483 |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 0.01063    |            |       |  0.05
+
+Nlocal:           1584 ave        1584 max        1584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           2563 ave        2563 max        2563 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:        96348 ave       96348 max       96348 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 96348
+Ave neighs/atom = 60.825758
+Neighbor list builds = 0
+Dangerous builds = 0
+
+reset_timestep 0
+run 0
+WARNING: No fixes with time integration, atoms won't move
+For more information see https://docs.lammps.org/err0028 (src/verlet.cpp:60)
+Per MPI rank memory allocation (min/avg/max) = 3.314 | 3.314 | 3.314 Mbytes
+   Step          Temp          PotEng         Volume         Press           Pxx            Pyy            Pzz           Fnorm     
+         0      0 -16643 26497 -4734.2 -7053.3 -0.014301 -7149.2 9.4766e-06
+Loop time of 1.171e-06 on 1 procs for 0 steps with 1584 atoms
+
+170.8% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 1.171e-06  |            |       |100.00
+
+Nlocal:           1584 ave        1584 max        1584 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           2563 ave        2563 max        2563 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:              0 ave           0 max           0 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+FullNghs:        96450 ave       96450 max       96450 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 96450
+Ave neighs/atom = 60.890152
+Neighbor list builds = 0
+Dangerous builds = 0
+
+unfix extra
+    
+Total wall time: 0:00:19

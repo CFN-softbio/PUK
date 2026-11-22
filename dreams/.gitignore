@@ -1,0 +1,19 @@
+out/*
+!out/.gitkeep
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+.env
+
+# Local Claude Code session state
+.claude/
+
+# Runtime artifacts kept out of the scaffold
+/lattice_constant.json
+/plot_convergence.py
+
+# Pseudopotential files (download separately, see README)
+pseudopotentials/*
+!pseudopotentials/.gitkeep

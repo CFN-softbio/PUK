@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "atomagents-simulations": {
+      "command": "python",
+      "args": ["-m", "atomagents_simulations.server"],
+      "env": {
+        "ATOMAGENTS_ROOT": "."
+      }
+    }
+  }
+}

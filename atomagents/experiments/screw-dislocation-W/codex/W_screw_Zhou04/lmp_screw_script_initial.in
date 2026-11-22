@@ -1,0 +1,39 @@
+
+clear
+units metal
+dimension 3
+boundary p s p
+
+shell cd ./W_screw_Zhou04
+
+variable data_file string "latice_pristine.lmp"
+variable potential_file string "potential.inp"
+variable thermo_time equal 100
+variable dump_time equal 1000
+
+read_data ${data_file}
+include ${potential_file}
+
+change_box all triclinic
+
+variable ymid equal 14.173955428884344
+
+region bot_region block INF INF INF ${ymid} INF INF units box
+region top_region block INF INF ${ymid} INF INF INF units box
+
+group bot region bot_region
+group top region top_region
+
+variable Xmin_t equal bound(top,xmin)+4.01
+variable Xmax_t equal bound(top,xmax)-4.01
+
+variable bz equal 2.7409704029777484
+
+displace_atoms top ramp z -${bz} 0 x ${Xmin_t} ${Xmax_t} units box
+
+reset_timestep 0
+dump last_dump all custom 1 dump.unrelaxed.dislocated.initial.lmp id type x y z
+run 0
+undump last_dump
+
+write_data data.unrelaxed.dislocated.initial.lmp

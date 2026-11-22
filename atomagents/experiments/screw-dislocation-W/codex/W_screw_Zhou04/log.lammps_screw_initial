@@ -1,0 +1,109 @@
+LAMMPS (22 Jul 2025 - Update 3)
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread.
+  using 1 OpenMP thread(s) per MPI task
+
+clear
+OMP_NUM_THREADS environment is not set. Defaulting to 1 thread.
+  using 1 OpenMP thread(s) per MPI task
+units metal
+dimension 3
+boundary p s p
+
+shell cd ./W_screw_Zhou04
+
+variable data_file string "latice_pristine.lmp"
+variable potential_file string "potential.inp"
+variable thermo_time equal 100
+variable dump_time equal 1000
+
+read_data ${data_file}
+read_data latice_pristine.lmp
+Reading data file ...
+  orthogonal box = (0 0 0) to (38.763175 31.331901 5.4819408)
+  1 by 1 by 1 MPI processor grid
+  reading atoms ...
+  420 atoms
+  read_data CPU = 0.001 seconds
+include ${potential_file}
+include potential.inp
+pair_style eam/alloy
+pair_coeff * * ../potential_repository/W_Zhou04.eam.alloy W
+Reading eam/alloy potential file ../potential_repository/W_Zhou04.eam.alloy with DATE: 2018-03-30
+
+change_box all triclinic
+Changing box ...
+  triclinic box = (0 -0.0060432076 0) to (38.763175 29.099952 5.4819408) with tilt (0 0 0)
+
+variable ymid equal 14.173955428884344
+
+region bot_region block INF INF INF ${ymid} INF INF units box
+region bot_region block INF INF INF 14.1739554288843 INF INF units box
+region top_region block INF INF ${ymid} INF INF INF units box
+region top_region block INF INF 14.1739554288843 INF INF INF units box
+
+group bot region bot_region
+210 atoms in group bot
+group top region top_region
+210 atoms in group top
+
+variable Xmin_t equal bound(top,xmin)+4.01
+variable Xmax_t equal bound(top,xmax)-4.01
+
+variable bz equal 2.7409704029777484
+
+displace_atoms top ramp z -${bz} 0 x ${Xmin_t} ${Xmax_t} units box
+displace_atoms top ramp z -2.74097040297775 0 x ${Xmin_t} ${Xmax_t} units box
+displace_atoms top ramp z -2.74097040297775 0 x 4.01 ${Xmax_t} units box
+displace_atoms top ramp z -2.74097040297775 0 x 4.01 33.4610693402257 units box
+Displacing atoms ...
+
+reset_timestep 0
+dump last_dump all custom 1 dump.unrelaxed.dislocated.initial.lmp id type x y z
+run 0
+WARNING: No fixes with time integration, atoms won't move
+For more information see https://docs.lammps.org/err0028 (src/verlet.cpp:60)
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 8.1287046
+  ghost atom cutoff = 8.1287046
+  binsize = 4.0643523, bins = 10 8 2
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair eam/alloy, perpetual
+      attributes: half, newton on
+      pair build: half/bin/atomonly/newton/tri
+      stencil: half/bin/3d/tri
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 3.396 | 3.396 | 3.396 Mbytes
+   Step          Temp          E_pair         E_mol          TotEng         Press          Volume    
+         0   0             -3587.9661      0             -3587.9661     -4840.4514      6183.6176    
+Loop time of 1.342e-06 on 1 procs for 0 steps with 420 atoms
+
+74.5% CPU use with 1 MPI tasks x 1 OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 1.342e-06  |            |       |100.00
+
+Nlocal:            420 ave         420 max         420 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Nghost:           1905 ave        1905 max        1905 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+Neighs:          26852 ave       26852 max       26852 min
+Histogram: 1 0 0 0 0 0 0 0 0 0
+
+Total # of neighbors = 26852
+Ave neighs/atom = 63.933333
+Neighbor list builds = 0
+Dangerous builds = 0
+undump last_dump
+
+write_data data.unrelaxed.dislocated.initial.lmp
+System init for write_data ...
+Total wall time: 0:00:00

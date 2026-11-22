@@ -1,0 +1,8 @@
+
+# Pseudopotential directory (relative paths are resolved against the dreams/ root)
+PSEUDO_DIR: 'pseudopotentials'
+
+# Working directory for DFT inputs and outputs
+WORKING_DIR: 'out'
+
+SAVE_DIALOGUE: 'False'

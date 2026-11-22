@@ -1,0 +1,46 @@
+
+clear
+units metal
+dimension 3
+boundary p p p
+atom_style atomic
+
+shell cd ./NbMo_Nb100
+
+variable data_file string "unit_lattice.lmp"
+variable potential_file string "potential.inp"
+variable thermo_time equal 100
+variable dump_time equal 1000
+
+
+read_data ${data_file}
+
+include ${potential_file}
+
+compute peratom all pe/atom
+compute pe all pe
+
+thermo_style custom step temp pe vol press pxx pyy pzz fnorm
+thermo_modify format float %5.5g
+thermo ${thermo_time}
+
+variable dump_id equal 1
+variable N equal 100
+variable dump_out_name string "dump.out"
+
+variable p1 equal "step"
+variable p2 equal "count(all)"
+variable p3 equal "lx"
+variable p4 equal "ly"
+variable p5 equal "lz"
+variable p6 equal "pe"
+variable p7 equal "vol"
+
+
+fix extra all print 100 "${p1} ${p2} ${p3} ${p4} ${p5} ${p6} ${p7}" file "outputs.csv" title "#step numb_atoms a_x a_y a_z pe vol" screen no
+
+reset_timestep 0
+run 0
+
+unfix extra
+    

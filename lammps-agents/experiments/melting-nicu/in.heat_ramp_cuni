@@ -1,0 +1,37 @@
+# ============================================================
+# Step 3: Heating ramp to locate the melting point
+#   - Start from the solid-liquid interface config at 300 K
+#   - Ramp T from 300 K -> 2100 K under NPT (zero pressure)
+#   - Log Temp and PE every 100 steps for Cp = dPE/dT analysis
+#   The pre-existing interface seeds heterogeneous melting,
+#   so the transition (PE jump / Cp peak) marks Tm with little
+#   superheating hysteresis.
+# ============================================================
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+
+read_data       interface.data
+
+pair_style      eam
+pair_coeff      1 1 Ni_u3.eam
+pair_coeff      2 2 Cu_u3.eam
+
+timestep        0.001
+reset_timestep  0
+
+velocity        all create 300.0 24680 mom yes rot yes dist gaussian
+
+thermo          100
+thermo_style    custom step temp pe ke etotal press vol lx ly lz
+
+dump            1 all custom 20000 heat_ramp.dump id type x y z
+
+# --- Slow heating ramp 300 -> 2100 K over 360 ps (5 K/ps) ---
+fix             1 all npt temp 300.0 2100.0 0.1 aniso 0.0 0.0 1.0
+run             360000
+unfix           1
+
+write_data      after_ramp.data
+print           "STEP3 DONE: heating ramp complete (300 -> 2100 K)"

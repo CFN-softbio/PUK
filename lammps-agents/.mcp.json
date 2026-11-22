@@ -1,0 +1,67 @@
+{
+  "mcpServers": {
+    "structure-server": {
+      "command": "python",
+      "args": [
+        "mcp-servers/structure-server/server.py"
+      ],
+      "env": {
+        "WORKSPACE_DIR": "workspace"
+      }
+    },
+    "potential-server": {
+      "command": "python",
+      "args": [
+        "mcp-servers/potential-server/server.py"
+      ],
+      "env": {
+        "WORKSPACE_DIR": "workspace"
+      }
+    },
+    "lammps-input-server": {
+      "command": "python",
+      "args": [
+        "mcp-servers/lammps-input-server/server.py"
+      ],
+      "env": {
+        "WORKSPACE_DIR": "workspace"
+      }
+    },
+    "lammps-executor-server": {
+      "command": "python",
+      "args": [
+        "mcp-servers/lammps-executor-server/server.py"
+      ],
+      "env": {
+        "WORKSPACE_DIR": "workspace"
+      }
+    },
+    "visualization-server": {
+      "command": "python",
+      "args": [
+        "mcp-servers/visualization-server/server.py"
+      ],
+      "env": {
+        "WORKSPACE_DIR": "workspace"
+      }
+    },
+    "results-server": {
+      "command": "python",
+      "args": [
+        "mcp-servers/results-server/server.py"
+      ],
+      "env": {
+        "WORKSPACE_DIR": "workspace"
+      }
+    },
+    "phonopy-server": {
+      "command": "python",
+      "args": [
+        "mcp-servers/phonopy-server/server.py"
+      ],
+      "env": {
+        "WORKSPACE_DIR": "workspace"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Simulation artifacts land in workspace/ — keep the dir, ignore its contents
+/workspace/*
+!/workspace/.gitkeep
+
+# OS / editor
+.DS_Store
+*.swp
+
+# Local Claude config
+.claude/

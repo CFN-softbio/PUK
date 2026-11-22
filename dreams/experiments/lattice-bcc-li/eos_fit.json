@@ -1,0 +1,20 @@
+{
+  "files": [
+    "Li_bcc_template_0.95.pwi.pwo",
+    "Li_bcc_template_0.975.pwi.pwo",
+    "Li_bcc_template_1.0.pwi.pwo",
+    "Li_bcc_template_1.025.pwi.pwo",
+    "Li_bcc_template_1.05.pwi.pwo"
+  ],
+  "natoms_per_cell": 2,
+  "sj": {
+    "a0_angstrom": 3.439826647416609,
+    "B0_GPa": 19.42368768686822,
+    "E0_eV": -393.8036702213323
+  },
+  "birchmurnaghan": {
+    "a0_angstrom": 3.439839023541943,
+    "B0_GPa": 19.40081466886713,
+    "E0_eV": -393.8036627241948
+  }
+}

@@ -1,0 +1,31 @@
+# Ni50Cu50 FCC: minimize and equilibrate the crystal at 300 K
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+timestep        0.002
+
+read_data       nicu50_fcc.lmp
+
+pair_style      eam
+pair_coeff      1 1 Ni_u3.eam
+pair_coeff      2 2 Cu_u3.eam
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+thermo          100
+thermo_style    custom step temp pe etotal press vol lx ly lz
+
+fix             relax all box/relax iso 0.0 vmax 0.001
+min_style       cg
+minimize        1.0e-10 1.0e-10 10000 100000
+unfix           relax
+
+reset_timestep  0
+velocity        all create 300.0 817263 mom yes rot no dist gaussian
+fix             eq all npt temp 300.0 300.0 0.2 iso 0.0 0.0 2.0
+run             10000
+unfix           eq
+
+write_data      nicu_relaxed.data
+

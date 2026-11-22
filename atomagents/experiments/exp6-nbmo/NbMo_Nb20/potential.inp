@@ -1,0 +1,2 @@
+pair_style mlip ../potential_repository/NbMo.mtp 
+pair_coeff * *

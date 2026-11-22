@@ -1,0 +1,6 @@
+job,kspacing,ecutwfc,energy,error,Acceptable
+Li_bcc_template_k_0.3_ecutwfc_120.pwi,0.3,120,-393.78585732520094,9.30268777366905,False
+Li_bcc_template_k_0.25_ecutwfc_120.pwi,0.25,120,-393.80236728813367,1.0477063073039972,False
+Li_bcc_template_k_0.2_ecutwfc_120.pwi,0.2,120,-393.8082854920106,1.9113956311684888,False
+Li_bcc_template_k_0.15_ecutwfc_120.pwi,0.15,120,-393.8068605678945,1.198933573107297,False
+Li_bcc_template_k_0.1_ecutwfc_120.pwi,0.1,120,-393.8044627007483,0.0,True

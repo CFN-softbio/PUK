@@ -1,0 +1,17 @@
+[project]
+name = "vision-mcp"
+version = "0.1.0"
+description = "MCP-server port of VISION's beamline cogs (PUKs case study)"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp[cli]>=1.2.0",
+]
+
+[project.optional-dependencies]
+# Only needed to reproduce the original VISION evaluation metrics.
+eval = [
+    "codebleu",
+    "Levenshtein",
+    "scikit-learn",
+]

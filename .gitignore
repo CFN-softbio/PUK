@@ -1,0 +1,15 @@
+# Reference papers (third-party copyright) and the unpublished manuscript
+PUKs/
+PUKs-Paper.pdf
+main.tex
+main.orig.tex
+# Internal pre-submission checklist
+ISSUES.md
+kevin_email.txt
+
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.claude/settings.local.json
+.DS_Store

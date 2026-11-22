@@ -1,0 +1,16 @@
+# Environment used for the BCC Li reproduction (Quantum ESPRESSO 7.5 `pw.x` must be on PATH)
+name: puks-dreams
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+      - mcp==1.28.0
+      - ase==3.28.0
+      - numpy==2.4.6
+      - pandas==2.3.3
+      - matplotlib==3.11.0
+      - pyyaml==6.0.3
+      - pysqa==0.4.3
+      - autocat==2022.8.5  # only needed for the surface/adsorbate tools

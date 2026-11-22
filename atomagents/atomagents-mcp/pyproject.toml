@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "atomagents-simulations"
+version = "0.1.0"
+description = "MCP server exposing AtomAgents LAMMPS simulation tools"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp[cli]>=1.0.0",
+    "numpy",
+    "pandas",
+    "ase",
+    "atomman",
+    "matplotlib",
+]
+
+[project.scripts]
+atomagents-simulations = "atomagents_simulations.server:main"

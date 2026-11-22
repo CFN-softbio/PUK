@@ -1,0 +1,29 @@
+# Ni50Cu50 solid-liquid configuration: continuous heating ramp, 300--2000 K
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+timestep        0.002
+
+read_data       nicu_interface.data
+
+pair_style      eam
+pair_coeff      1 1 Ni_u3.eam
+pair_coeff      2 2 Cu_u3.eam
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+reset_timestep  0
+velocity        all create 300.0 192837 mom yes rot no dist gaussian
+fix             heat all npt temp 300.0 2000.0 0.2 iso 0.0 0.0 2.0
+
+thermo          100
+thermo_style    custom step temp pe etotal vol press
+thermo_modify   flush yes
+dump            traj all custom 1000 nicu_heating.dump id type x y z
+run             100000
+
+unfix           heat
+undump          traj
+write_data      nicu_heated.data
+

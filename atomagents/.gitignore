@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Simulation folders created when running from this directory
+/*/
+!/atomagents-mcp/
+!/potential_repository/
+!/0_codes/
+!/experiments/

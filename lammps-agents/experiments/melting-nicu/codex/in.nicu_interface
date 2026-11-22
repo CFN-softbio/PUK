@@ -1,0 +1,37 @@
+# Ni50Cu50 FCC: freeze the upper half and melt the lower half under NVT
+units           metal
+dimension       3
+boundary        p p p
+atom_style      atomic
+timestep        0.002
+
+read_data       nicu_relaxed.data
+
+pair_style      eam
+pair_coeff      1 1 Ni_u3.eam
+pair_coeff      2 2 Cu_u3.eam
+neighbor        2.0 bin
+neigh_modify    every 1 delay 0 check yes
+
+variable        zmid equal 0.5*(zlo+zhi)
+run             0
+variable        zcut equal ${zmid}
+region          upper block INF INF INF INF ${zcut} INF units box
+group           solid region upper
+group           liquid subtract all solid
+
+velocity        solid set 0.0 0.0 0.0
+velocity        liquid create 2200.0 918374 mom yes rot no dist gaussian
+fix             freeze solid setforce 0.0 0.0 0.0
+fix             melt liquid nvt temp 2200.0 2200.0 0.2
+
+thermo          100
+thermo_style    custom step temp pe etotal press vol
+dump            traj all custom 500 nicu_interface.dump id type x y z
+run             20000
+
+unfix           melt
+unfix           freeze
+undump          traj
+write_data      nicu_interface.data
+

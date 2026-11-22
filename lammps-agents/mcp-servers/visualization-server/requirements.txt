@@ -1,0 +1,7 @@
+ovito
+matplotlib
+seaborn
+numpy
+scipy
+imageio
+mcp

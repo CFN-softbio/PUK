@@ -1,0 +1,23 @@
+# LAMMPS input for phonon force calculation
+units metal
+atom_style atomic
+boundary p p p
+read_data structure.lmp
+
+# Potential settings
+pair_style eam
+pair_coeff * * Au_u3.eam
+
+# Neighbor settings
+neighbor 2.0 bin
+neigh_modify delay 0 every 1 check yes
+
+# Force calculation
+compute forces all property/atom fx fy fz
+dump forces all custom 1 forces.dump id type x y z fx fy fz
+
+# Run single point calculation
+run 0
+
+# Output final forces
+write_dump all custom forces.dat id type x y z fx fy fz modify sort id

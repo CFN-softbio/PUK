@@ -1,0 +1,81 @@
+
+clear
+units metal
+dimension 3
+boundary p p p
+atom_style atomic
+
+shell cd ./NbMo_Nb100
+
+variable data_file string "lattice_constant_alloy.lmp"
+variable potential_file string "potential.inp"
+variable thermo_time equal 100
+variable dump_time equal 1000
+
+
+read_data ${data_file}
+
+include ${potential_file}
+
+compute peratom all pe/atom
+compute pe all pe
+
+thermo_style custom step temp pe vol lx ly lz press pxx pyy pzz fnorm
+thermo_modify format float %5.5g
+thermo ${thermo_time}
+
+shell mkdir dump_lattice_constant
+
+reset_timestep 0
+dump first_dump all custom 1 dump.lattice.initial.0 id type x y z c_peratom
+run 0
+undump first_dump
+
+variable dump_id equal 1
+variable N equal 100
+variable dump_out_name string "./dump_lattice_constant/dump.out"
+dump ${dump_id} all custom ${dump_time} ${dump_out_name}.* id type x y z c_peratom
+
+variable p1 equal "step"
+variable p2 equal "count(all)"
+variable p3 equal "lx"
+variable p4 equal "ly"
+variable p5 equal "lz"
+variable p6 equal "pe"
+variable p7 equal "vol"
+
+fix 1 all box/relax aniso 0
+min_style cg
+minimize 0 1e-5 2000 20000
+unfix 1
+
+min_style cg
+minimize 0 1e-5 20000 20000
+
+fix 1 all box/relax aniso 0
+min_style cg
+minimize 0 1e-5 2000 20000
+unfix 1
+
+min_style cg
+minimize 0 1e-5 20000 20000
+
+fix 1 all box/relax aniso 0
+min_style cg
+minimize 0 1e-5 2000 20000
+unfix 1
+
+min_style cg
+minimize 0 1e-5 20000 20000
+
+
+fix extra all print 100 "${p1} ${p2} ${p3} ${p4} ${p5} ${p6} ${p7}" file "relaxed_outputs.csv" title "#step numb_atoms a_x a_y a_z pe vol" screen no
+
+reset_timestep 0
+dump last_dump all custom 1 dump.lattice.final.0 id type x y z c_peratom
+run 0
+
+unfix extra
+undump last_dump
+quit
+        
